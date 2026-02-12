@@ -1,0 +1,31 @@
+name: Saju Bot Daily Run
+
+on:
+  schedule:
+    # 매일 한국시간 오전 7시
+    - cron: '0 22 * * *'
+  workflow_dispatch: # 수동 실행 버튼 활성화
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v3
+
+      - name: 파이썬 설치
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 라이브러리 설치
+        run: pip install -r requirements.txt
+
+      - name: 봇 실행하기
+        env:
+          NAVER_ACCESS_LICENSE: ${{ secrets.NAVER_ACCESS_LICENSE }}
+          NAVER_SECRET_KEY: ${{ secrets.NAVER_SECRET_KEY }}
+          CUSTOMER_ID: ${{ secrets.CUSTOMER_ID }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: python main.py
